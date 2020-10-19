@@ -4,6 +4,20 @@ import type { Help } from "saurus/console.ts";
 import type { Saurus } from "saurus/saurus.ts";
 import type { Server } from "saurus/server.ts";
 
+export class ServerRemoteCMD {
+  constructor(
+    readonly plugin: RemoteCMD,
+    readonly server: Server
+  ) {
+    const name = server.name.toLowerCase()
+
+    plugin.servers.set(name, server)
+
+    server.once(["close"],
+      () => plugin.servers.delete(name))
+  }
+}
+
 export class RemoteCMD {
   servers = new Map<string, Server>()
 
@@ -20,21 +34,11 @@ export class RemoteCMD {
     readonly saurus: Saurus,
   ) {
     saurus.console.on(["command"],
-      this.oncommand.bind(this),
-      this.onremote.bind(this))
+      this.onremote.bind(this),
+      this.oncommand.bind(this))
 
     saurus.console.on(["help"],
       this.onhelp.bind(this))
-  }
-
-  add(
-    server: Server,
-    name = server.name.toLowerCase()
-  ) {
-    this.servers.set(name, server)
-
-    server.once(["close"],
-      () => this.servers.delete(name))
   }
 
   private async onhelp(help: Help) {
@@ -68,9 +72,6 @@ export class RemoteCMD {
   private async oncommand(command: string) {
     const [label, ...args] = command.split(" ")
     if (label !== "remote") return;
-
-    if (this.server)
-      throw new Error("Already connected")
 
     const [name, ...extras] = args
 
