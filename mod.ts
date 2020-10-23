@@ -1,4 +1,4 @@
-import { Cancelled } from "mutevents"
+import { Cancelled } from "mutevents/mod.ts"
 
 import type { Help } from "saurus/console.ts";
 import type { Saurus } from "saurus/saurus.ts";
