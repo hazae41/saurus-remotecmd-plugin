@@ -1,8 +1,8 @@
-import { Cancelled } from "mutevents/mod.ts"
+import { Cancelled } from "saurus/deps/mutevents.ts"
 
-import type { Help } from "saurus/console.ts";
-import type { Saurus } from "saurus/saurus.ts";
-import type { Server } from "saurus/server.ts";
+import type { Help } from "saurus/src/console.ts";
+import type { Saurus } from "saurus/src/saurus.ts";
+import type { Server } from "saurus/src/server.ts";
 
 export class ServerRemoteCMD {
   constructor(
